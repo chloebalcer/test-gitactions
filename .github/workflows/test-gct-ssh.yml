@@ -31,5 +31,5 @@ jobs:
         username: ${{ secrets.GCP_VM_USER }}
         key: ${{ secrets.GCP_VM_SSH_KEY }}
         script: |
-          sudo touch new.py
+          sudo touch test_push_file.py
           
