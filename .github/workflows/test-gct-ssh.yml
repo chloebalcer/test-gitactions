@@ -29,7 +29,8 @@ jobs:
       with:
         host: ${{ secrets.GCP_VM_IP }}
         username: ${{ secrets.GCP_VM_USER }}
-        key: ${{ secrets.GCP_VM_SSH_KEY }}
+        key: ${{ secrets.GCP_VM_SSH_KEY }} | base64
         script: |
-          sudo touch test_push_file.py
+          touch one_test.sh
+          docker compose pull
           
