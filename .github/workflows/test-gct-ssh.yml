@@ -31,6 +31,9 @@ jobs:
         username: ${{ secrets.GCP_VM_USER }}
         key: ${{ secrets.GCP_VM_SSH_KEY }}
         script: |
-          touch one_test.sh
-          docker compose pull
+          sudo usermod -aG docker $USER
+          newgrp docker
+          gcloud auth configure-docker europe-west9-docker.pkg.dev
+          sudo docker compose pull
+          sudo docker compose up -d
           
