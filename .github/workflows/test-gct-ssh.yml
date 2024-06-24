@@ -33,7 +33,8 @@ jobs:
         script: |
           sudo usermod -aG docker $USER
           newgrp docker
-          gcloud auth configure-docker europe-west9-docker.pkg.dev
+          sudo gcloud auth configure-docker europe-west9-docker.pkg.dev
           sudo docker compose pull
           sudo docker compose up -d
+          sudo touch some_fome.sh
           
