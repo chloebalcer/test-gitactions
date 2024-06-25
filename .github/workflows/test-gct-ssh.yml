@@ -20,21 +20,19 @@ jobs:
         service_account_key: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
         export_default_credentials: true
 
-    - name: Authenticate Docker with GCR
-      run: |
-        gcloud auth configure-docker europe-west9-docker.pkg.dev
-
     - name: Deploy to GCP VM
       uses: appleboy/ssh-action@v0.1.5
       with:
         host: ${{ secrets.GCP_VM_IP }}
         username: ${{ secrets.GCP_VM_USER }}
         key: ${{ secrets.GCP_VM_SSH_KEY }}
+        project_id: ${{ secrets.GOOGLE_PROJECT }}
+        service_account_key: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
+        export_default_credentials: true
         script: |
           sudo usermod -aG docker $USER
           newgrp docker
           sudo gcloud auth configure-docker europe-west9-docker.pkg.dev
           sudo docker compose pull
           sudo docker compose up -d
-          sudo touch some_fome.sh
           
