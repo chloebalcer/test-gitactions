@@ -23,8 +23,8 @@ jobs:
 
     - name: Set crdential_file
       run: | 
-        sudo gcloud auth login --cred-file=${{steps.auth.outputs.credentials_file_path}}
         sudo gcloud config set project "mentat-minds"
+        sudo gcloud auth login --cred-file=${{steps.auth.outputs.credentials_file_path}}
 
     - name: Deploy to GCP VM
       uses: appleboy/ssh-action@v0.1.5
