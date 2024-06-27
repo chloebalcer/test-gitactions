@@ -31,8 +31,6 @@ jobs:
         username: ${{ secrets.GCP_VM_USER }}
         key: ${{ secrets.GCP_VM_SSH_KEY }}
         script: |
-          sudo gcloud auth login --cred-file=${{steps.auth.outputs.credentials_file_path}}
-          sudo gcloud auth configure-docker europe-west9-docker.pkg.dev --quiet
           sudo docker compose pull
           sudo docker compose up -d
           
