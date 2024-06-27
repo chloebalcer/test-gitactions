@@ -18,15 +18,21 @@ jobs:
       with:
           credentials_json: "${{ secrets.SERVICE_ACCOUNT_KEY }}"
 
-    - name: Deploy to GCP VM
-      uses: appleboy/ssh-action@v0.1.5
-      with:
-        host: ${{ secrets.GCP_VM_IP }}
-        username: ${{ secrets.GCP_VM_USER }}
-        key: ${{ secrets.GCP_VM_SSH_KEY }}
-        script: |
-          sudo gcloud auth login --cred-file=${{steps.auth.outputs.credentials_file_path}}
-          sudo gcloud auth configure-docker europe-west9-docker.pkg.dev --quiet
-          sudo docker compose pull
-          sudo docker compose up -d
+    - name: Set up Cloud SDK
+      uses: google-github-actions/setup-gcloud@v2.1.0
+
+    - name: Set crdential_file
+      run: gcloud auth login --cred-file=${{steps.auth.outputs.credentials_file_path}}
+
+    # - name: Deploy to GCP VM
+    #   uses: appleboy/ssh-action@v0.1.5
+    #   with:
+    #     host: ${{ secrets.GCP_VM_IP }}
+    #     username: ${{ secrets.GCP_VM_USER }}
+    #     key: ${{ secrets.GCP_VM_SSH_KEY }}
+    #     script: |
+    #       sudo gcloud auth login --cred-file=${{steps.auth.outputs.credentials_file_path}}
+    #       sudo gcloud auth configure-docker europe-west9-docker.pkg.dev --quiet
+    #       sudo docker compose pull
+    #       sudo docker compose up -d
           
