@@ -23,7 +23,6 @@ jobs:
 
     - name: Set crdential_file
       run: sudo gcloud config set project "mentat-minds"
-        sudo gcloud config set project "mentat-minds"
     
     - name: Authenticate to GCP
       run: sudo gcloud auth login --cred-file=${{steps.auth.outputs.credentials_file_path}}
