@@ -12,13 +12,11 @@ jobs:
 
     - name: Checkout code
       uses: actions/checkout@v2
-
-    - name: Set up Google Cloud SDK
-      uses: google-github-actions/setup-gcloud@v0
+    
+    - id: auth
+      uses: 'google-github-actions/auth@v2'
       with:
-        project_id: ${{ secrets.GOOGLE_PROJECT }}
-        service_account_key: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
-        export_default_credentials: true
+          credentials_json: "${{ secrets.SERVICE_ACCOUNT_KEY }}"
 
     - name: Deploy to GCP VM
       uses: appleboy/ssh-action@v0.1.5
@@ -27,6 +25,7 @@ jobs:
         username: ${{ secrets.GCP_VM_USER }}
         key: ${{ secrets.GCP_VM_SSH_KEY }}
         script: |
+          sudo gcloud auth login --cred-file=${{steps.auth.outputs.credentials_file_path}}
           sudo gcloud auth configure-docker europe-west9-docker.pkg.dev --quiet
           sudo docker compose pull
           sudo docker compose up -d
