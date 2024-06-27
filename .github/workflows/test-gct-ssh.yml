@@ -34,5 +34,5 @@ jobs:
         username: ${{ secrets.GCP_VM_USER }}
         key: ${{ secrets.GCP_VM_SSH_KEY }}
         script: |
-          sudo docker compose pull
+          sudo docker compose pull -e GOOGLE_APPLICATION_CREDENTIALS=${{ secrets.SERVICE_ACCOUNT_KEY }
           
