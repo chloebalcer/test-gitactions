@@ -29,10 +29,12 @@ jobs:
 
     - name: Deploy to GCP VM
       uses: appleboy/ssh-action@v0.1.5
+      env:
+        GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.SERVICE_ACCOUNT_KEY }}
       with:
         host: ${{ secrets.GCP_VM_IP }}
         username: ${{ secrets.GCP_VM_USER }}
         key: ${{ secrets.GCP_VM_SSH_KEY }}
         script: |
-          sudo docker compose pull -e GOOGLE_APPLICATION_CREDENTIALS=${{ secrets.SERVICE_ACCOUNT_KEY }}
+          sudo docker compose pull
           
