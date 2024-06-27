@@ -12,28 +12,30 @@ jobs:
 
     - name: Checkout code
       uses: actions/checkout@v2
-    
-    - id: auth
-      uses: 'google-github-actions/auth@v2'
+
+    - name: Copy GCP credential file from VM
+      uses: appleboy/scp-action@v0.1.5
       with:
-          credentials_json: "${{ secrets.SERVICE_ACCOUNT_KEY }}"
+        host: ${{ secrets.GCP_VM_IP }}
+        username: ${{ secrets.GCP_VM_USER }}
+        key: ${{ secrets.GCP_VM_SSH_KEY }}
+        source: /path/to/your/credential-file.json
+        target: ./credential-file.json
+
+    - name: Authenticate to GCP
+      run: gcloud auth activate-service-account --key-file=./credential-file.json
 
     - name: Set up Cloud SDK
       uses: google-github-actions/setup-gcloud@v2.1.0
-
-    - name: Set crdential_file
-      run: sudo gcloud config set project "mentat-minds"
-    
-    - name: Authenticate to GCP
-      run: sudo gcloud auth login --cred-file=${{steps.auth.outputs.credentials_file_path}}
+      with:
+        project_id: ${{ secrets.GCP_PROJECT_ID }}
 
     - name: Deploy to GCP VM
       uses: appleboy/ssh-action@v0.1.5
-      env:
-        GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.SERVICE_ACCOUNT_KEY }}
       with:
         host: ${{ secrets.GCP_VM_IP }}
-        credentials_json: "${{ secrets.SERVICE_ACCOUNT_KEY }}"
+        username: ${{ secrets.GCP_VM_USER }}
+        key: ${{ secrets.GCP_VM_SSH_KEY }}
         script: |
+          gcloud auth configure-docker europe-west9-docker.pkg.dev --quiet
           sudo docker compose pull
-          
