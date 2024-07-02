@@ -12,23 +12,14 @@ jobs:
 
     - name: Checkout code
       uses: actions/checkout@v2
-
-    - name: Copy GCP credential file from VM
-      uses: appleboy/scp-action@v0.1.5
+    
+    - id: auth
+      uses: 'google-github-actions/auth@v2'
       with:
-        host: ${{ secrets.GCP_VM_IP }}
-        username: ${{ secrets.GCP_VM_USER }}
-        key: ${{ secrets.GCP_VM_SSH_KEY }}
-        source: /path/to/your/credential-file.json
-        target: ./credential-file.json
-
-    - name: Authenticate to GCP
-      run: gcloud auth activate-service-account --key-file=./credential-file.json
+          credentials_json: "${{ secrets.SERVICE_ACCOUNT_KEY }}"
 
     - name: Set up Cloud SDK
       uses: google-github-actions/setup-gcloud@v2.1.0
-      with:
-        project_id: ${{ secrets.GCP_PROJECT_ID }}
 
     - name: Deploy to GCP VM
       uses: appleboy/ssh-action@v0.1.5
@@ -37,5 +28,5 @@ jobs:
         username: ${{ secrets.GCP_VM_USER }}
         key: ${{ secrets.GCP_VM_SSH_KEY }}
         script: |
-          gcloud auth configure-docker europe-west9-docker.pkg.dev --quiet
           sudo docker compose pull
+          
